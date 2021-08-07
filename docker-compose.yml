@@ -1,20 +1,22 @@
-version: "3.9"
+version: "3"
 services:
-  dustbiin-service:
-    image: "dustbiin-service:1.0"
-    build: .
-    restart: "always"
-    port:
-      - "8082:8080"
-    depends_on:
-      - "database"
   database:
     image: "mysql"
     restart: "always"
-    port:
-      - "3307:3306"
+    ports:
+      - 3307:3306
     environment:
       MYSQL_DATABASE: "dustbiin"
-      MYSQL_USER: "root"
-      MYSQL_PASSWORD: "root"
       MYSQL_ROOT_PASSWORD: "root"
+  dustbiin-service:
+    image: "dustbiin-service:1.0"
+    build:
+      context: .
+      dockerfile: DockerFile
+    restart: "always"
+    ports:
+      - "8082:8080"
+    depends_on:
+      - "database"
+    links:
+      - database:localhost
